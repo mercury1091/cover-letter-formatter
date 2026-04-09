@@ -4,10 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cover Letter Formatter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            resize: vertical;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
     <h1>Cover Letter Formatter</h1>
-    <p>Hello, my name is <strong>mercury1091</strong>, and I'm applying for a position.</p>
-    <p>Current Date and Time (UTC): <strong>2026-04-09 14:48:12</strong></p>
+    <form id="coverLetterForm">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="address">Your Address:</label>
+        <input type="text" id="address" name="address" required>
+
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="company">Company Name:</label>
+        <input type="text" id="company" name="company" required>
+
+        <label for="position">Position Applied:</label>
+        <input type="text" id="position" name="position" required>
+
+        <label for="message">Cover Letter Message:</label>
+        <textarea id="message" name="message" rows="10" required></textarea>
+
+        <button type="submit">Format Cover Letter</button>
+    </form>
+
+    <h2>Formatted Cover Letter:</h2>
+    <pre id="formattedOutput"></pre>
+
+    <script>
+        document.getElementById('coverLetterForm').onsubmit = function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const email = document.getElementById('email').value;
+            const company = document.getElementById('company').value;
+            const position = document.getElementById('position').value;
+            const message = document.getElementById('message').value;
+
+            const formattedLetter = `Dear ${company},\n\n` +
+                `My name is ${name}, and I am applying for the position of ${position}.\n` +
+                `\n` +
+                `${message}\n` +
+                `\n` +
+                `Best regards,\n` +
+                `${name}\n` +
+                `${address}\n` +
+                `${email}`;
+
+            document.getElementById('formattedOutput').textContent = formattedLetter;
+        };
+    </script>
 </body>
 </html>
