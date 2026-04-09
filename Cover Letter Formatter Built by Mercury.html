@@ -1,0 +1,931 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cover Letter Formatter Built by Mercury</title>
+  <style>
+    :root {
+      --bg-top: #f8f4ee;
+      --bg-bottom: #eee7dc;
+      --panel: rgba(255, 252, 247, 0.92);
+      --panel-border: rgba(185, 173, 156, 0.28);
+      --paper: #ffffff;
+      --ink: #17212b;
+      --muted: #6b7280;
+      --accent: #8b5e3c;
+      --accent-strong: #71482a;
+      --line: #ddd4c8;
+      --success: #0f766e;
+      --warn: #b45309;
+      --shadow: 0 24px 60px rgba(31, 41, 55, 0.14);
+      --page-width: 8.27in;
+      --page-height: 11.69in;
+      --page-padding: 0.78in;
+      --body-size: 11.1pt;
+      --body-leading: 1.58;
+      --scale: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.75), transparent 34%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+      font-family: "Aptos", "Segoe UI", sans-serif;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 390px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 24px 22px 28px;
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      border-right: 1px solid var(--panel-border);
+    }
+
+    .brand {
+      margin-bottom: 20px;
+      padding: 18px 18px 16px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(246,239,229,0.95));
+      border: 1px solid rgba(185, 173, 156, 0.28);
+      box-shadow: 0 16px 35px rgba(113, 72, 42, 0.08);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent-strong);
+      background: rgba(139, 94, 60, 0.1);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: 1.62rem;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.95rem;
+    }
+
+    .group {
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      margin: 22px 0 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-strong);
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 7px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #3d4957;
+    }
+
+    .label-note {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid #d6d1c8;
+      border-radius: 16px;
+      padding: 11px 13px;
+      font: inherit;
+      color: var(--ink);
+      background: #fffdf9;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: rgba(139, 94, 60, 0.7);
+      box-shadow: 0 0 0 4px rgba(139, 94, 60, 0.12);
+      transform: translateY(-1px);
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .bodybox {
+      min-height: 280px;
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      line-height: 1.68;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid rgba(185, 173, 156, 0.36);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .range-wrap {
+      display: grid;
+      gap: 8px;
+    }
+
+    input[type="range"] {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .range-value {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 14px 0 0;
+    }
+
+    .stat {
+      padding: 12px 10px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(185, 173, 156, 0.28);
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.96rem;
+    }
+
+    .stat span {
+      font-size: 0.73rem;
+      color: var(--muted);
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .primary {
+      color: white;
+      background: linear-gradient(135deg, #1e293b, #111827);
+      box-shadow: 0 14px 30px rgba(17, 24, 39, 0.18);
+    }
+
+    .secondary {
+      color: var(--ink);
+      background: white;
+      border: 1px solid #d6d1c8;
+    }
+
+    .ghost {
+      color: var(--accent-strong);
+      background: rgba(139, 94, 60, 0.08);
+      border: 1px solid rgba(139, 94, 60, 0.14);
+    }
+
+    .tip {
+      margin-top: 16px;
+      padding: 14px 15px;
+      border-radius: 18px;
+      background: rgba(250, 247, 242, 0.94);
+      border: 1px solid rgba(185, 173, 156, 0.28);
+      color: #586170;
+      font-size: 0.84rem;
+      line-height: 1.55;
+    }
+
+    .preview-wrap {
+      padding: 34px 32px 28px;
+      overflow: auto;
+    }
+
+    .preview-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 auto 18px;
+      max-width: 1080px;
+      color: #495463;
+      font-size: 0.9rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.76);
+      border: 1px solid rgba(185, 173, 156, 0.25);
+    }
+
+    .preview-stage {
+      display: flex;
+      justify-content: center;
+      padding: 10px 0 18px;
+    }
+
+    .paper-shell {
+      position: relative;
+      padding: 18px;
+      border-radius: 32px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.78), rgba(249,244,238,0.88));
+      border: 1px solid rgba(185, 173, 156, 0.24);
+      box-shadow: 0 20px 50px rgba(113, 72, 42, 0.08);
+    }
+
+    .paper {
+      width: calc(var(--page-width) * var(--scale));
+      min-height: calc(var(--page-height) * var(--scale));
+      background: var(--paper);
+      padding: calc(var(--page-padding) * var(--scale));
+      box-shadow: var(--shadow);
+      transform-origin: top center;
+      position: relative;
+    }
+
+    .paper-inner {
+      width: var(--page-width);
+      min-height: calc(var(--page-height) - (2 * var(--page-padding)));
+      transform: scale(var(--scale));
+      transform-origin: top left;
+    }
+
+    .letter-header {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1.5px solid var(--line);
+      margin-bottom: 16px;
+    }
+
+    .name {
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .headline {
+      font-size: 11.2pt;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: var(--accent-strong);
+    }
+
+    .contact {
+      text-align: right;
+      font-size: 10pt;
+      line-height: 1.55;
+      color: #364152;
+    }
+
+    .meta {
+      margin-bottom: 18px;
+      font-size: 10.5pt;
+      line-height: 1.62;
+      color: #374151;
+    }
+
+    .subject {
+      margin-bottom: 14px;
+      font-size: 10.9pt;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .body {
+      font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: var(--body-size);
+      line-height: var(--body-leading);
+      color: #1f2937;
+    }
+
+    .body p {
+      margin: 0 0 12pt;
+      text-align: justify;
+      hyphens: auto;
+    }
+
+    .closing {
+      margin-top: 18px;
+      font-size: 10.95pt;
+      line-height: 1.55;
+      white-space: pre-line;
+    }
+
+    .page-note {
+      margin: 8px auto 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .status-ok {
+      color: var(--success);
+    }
+
+    .status-warn {
+      color: var(--warn);
+    }
+
+    @media (max-width: 1180px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        position: relative;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--panel-border);
+      }
+
+      .preview-wrap {
+        padding: 18px 14px 24px;
+      }
+
+      .preview-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .row,
+      .controls,
+      .buttons,
+      .quick-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .paper-shell {
+        padding: 10px;
+      }
+
+      .paper {
+        width: 100%;
+        min-height: auto;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .panel,
+      .preview-topbar,
+      .page-note {
+        display: none !important;
+      }
+
+      .preview-wrap,
+      .preview-stage,
+      .paper-shell {
+        padding: 0;
+        margin: 0;
+        background: transparent;
+        box-shadow: none;
+        border: 0;
+      }
+
+      .paper {
+        width: 100%;
+        min-height: auto;
+        padding: 0;
+        box-shadow: none;
+      }
+
+      .paper-inner {
+        width: auto;
+        min-height: auto;
+        transform: none;
+        padding: var(--page-padding);
+      }
+
+      @page {
+        size: A4;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="panel">
+      <div class="brand">
+        <div class="eyebrow">PDF-first static app</div>
+        <h1>Cover Letter Formatter</h1>
+        <p class="sub">Built by Mercury. Paste a letter, refine the layout, and export a clean one-page PDF-ready version instantly.</p>
+      </div>
+
+      <div class="section-title">Applicant Details</div>
+
+      <div class="group">
+        <label for="fullName">Full name</label>
+        <input id="fullName" />
+      </div>
+
+      <div class="group">
+        <label for="headline">Headline</label>
+        <input id="headline" />
+      </div>
+
+      <div class="row">
+        <div class="group">
+          <label for="email">Email</label>
+          <input id="email" />
+        </div>
+        <div class="group">
+          <label for="phone">Phone</label>
+          <input id="phone" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="group">
+          <label for="location">Location</label>
+          <input id="location" />
+        </div>
+        <div class="group">
+          <label for="date">Date</label>
+          <input id="date" />
+        </div>
+      </div>
+
+      <div class="section-title">Role Details</div>
+
+      <div class="group">
+        <label for="recipient">Recipient / Hiring team</label>
+        <input id="recipient" />
+      </div>
+
+      <div class="row">
+        <div class="group">
+          <label for="company">Company</label>
+          <input id="company" />
+        </div>
+        <div class="group">
+          <label for="role">Role</label>
+          <input id="role" />
+        </div>
+      </div>
+
+      <div class="group">
+        <label for="subject">
+          Subject line
+          <span class="label-note">optional</span>
+        </label>
+        <input id="subject" />
+      </div>
+
+      <div class="group">
+        <label for="body">
+          Letter body
+          <span class="label-note">paste full draft here</span>
+        </label>
+        <textarea id="body" class="bodybox"></textarea>
+      </div>
+
+      <div class="section-title">Layout Controls</div>
+
+      <div class="controls">
+        <div class="range-wrap">
+          <label for="margin">
+            Margin
+            <span class="label-note" id="marginValue">0.78 in</span>
+          </label>
+          <input id="margin" type="range" min="0.55" max="1.05" step="0.01" />
+          <div class="range-value">Tighter margins fit more text. Wider margins feel more open.</div>
+        </div>
+
+        <div class="range-wrap">
+          <label for="fontSize">
+            Body font
+            <span class="label-note" id="fontSizeValue">11.1 pt</span>
+          </label>
+          <input id="fontSize" type="range" min="10.2" max="12.4" step="0.1" />
+          <div class="range-value">Preview updates live as you fine-tune the reading density.</div>
+        </div>
+      </div>
+
+      <div class="quick-stats">
+        <div class="stat">
+          <strong id="wordCount">0</strong>
+          <span>words</span>
+        </div>
+        <div class="stat">
+          <strong id="paragraphCount">0</strong>
+          <span>paragraphs</span>
+        </div>
+        <div class="stat">
+          <strong id="pageScale">100%</strong>
+          <span>fit scale</span>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button class="primary" id="fitBtn">Auto-fit One Page</button>
+        <button class="secondary" id="pdfBtn">Download PDF</button>
+        <button class="ghost" id="copyBtn">Copy Plain Text</button>
+        <button class="secondary" id="resetBtn">Reset Sample</button>
+      </div>
+
+      <div class="tip">
+        Best workflow: paste the final content, tap <strong>Auto-fit One Page</strong>, then choose <strong>Save as PDF</strong> in the print dialog. Everything in this public version uses neutral sample data.
+      </div>
+    </aside>
+
+    <main class="preview-wrap">
+      <div class="preview-topbar">
+        <div><strong>Live preview</strong> for a polished A4 cover letter.</div>
+        <div class="status-pill" id="statusPill">Ready to format.</div>
+      </div>
+
+      <div class="preview-stage">
+        <div class="paper-shell">
+          <div class="paper">
+            <div class="paper-inner" id="paperInner">
+              <div class="letter-header">
+                <div>
+                  <div class="name" id="pName">Alex Taylor</div>
+                  <div class="headline" id="pHeadline">Product Manager</div>
+                </div>
+                <div class="contact">
+                  <div id="pEmail">alex.taylor@example.com</div>
+                  <div id="pPhone">+1 (555) 123-4567</div>
+                  <div id="pLocation">City, Country</div>
+                </div>
+              </div>
+
+              <div class="meta">
+                <div id="pDate"></div>
+                <div id="pRecipient">Hiring Committee</div>
+                <div id="pCompany">Example Company</div>
+              </div>
+
+              <div class="subject" id="pSubject">Application for Operations Manager</div>
+              <div class="body" id="pBody"></div>
+              <div class="closing" id="pClosing"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-note" id="status">Ready.</div>
+    </main>
+  </div>
+
+  <script>
+    function formatToday() {
+      return new Date().toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+    }
+
+    const defaults = {
+      fullName: "Alex Taylor",
+      headline: "Product Manager",
+      email: "alex.taylor@example.com",
+      phone: "+1 (555) 123-4567",
+      location: "City, Country",
+      date: formatToday(),
+      recipient: "Hiring Committee",
+      company: "Example Company",
+      role: "Operations Manager",
+      subject: "",
+      body: [
+        "Dear Hiring Committee,",
+        "",
+        "I am excited to apply for the Operations Manager position at Example Company. My background combines structured execution, cross-functional collaboration, and a strong focus on improving customer and team outcomes. I enjoy translating complex needs into practical plans, measurable progress, and dependable delivery.",
+        "",
+        "In recent roles, I have supported initiatives that required clear communication, process design, and close coordination across stakeholders. I am comfortable moving from strategy into execution, refining workflows, and keeping projects on track while maintaining a high bar for quality and professionalism.",
+        "",
+        "What attracts me to this opportunity is the chance to contribute thoughtful problem-solving, calm ownership, and a strong service mindset. I would welcome the opportunity to discuss how my experience can support your team and goals.",
+        "",
+        "Best regards,",
+        "Alex Taylor"
+      ].join("\n"),
+      margin: "0.78",
+      fontSize: "11.1"
+    };
+
+    const ids = [
+      "fullName", "headline", "email", "phone", "location", "date",
+      "recipient", "company", "role", "subject", "body", "margin", "fontSize"
+    ];
+
+    const state = {};
+    const root = document.documentElement;
+    const paper = document.getElementById("paperInner");
+    const status = document.getElementById("status");
+    const statusPill = document.getElementById("statusPill");
+    const marginValue = document.getElementById("marginValue");
+    const fontSizeValue = document.getElementById("fontSizeValue");
+    const wordCount = document.getElementById("wordCount");
+    const paragraphCount = document.getElementById("paragraphCount");
+    const pageScale = document.getElementById("pageScale");
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function setDefaults() {
+      ids.forEach((id) => {
+        document.getElementById(id).value = defaults[id];
+      });
+    }
+
+    function valueOrFallback(value, fallback) {
+      return String(value || "").trim() || fallback;
+    }
+
+    function splitBody(text) {
+      return String(text || "")
+        .replace(/\r/g, "")
+        .split(/\n\s*\n/)
+        .map((part) => part.trim())
+        .filter(Boolean);
+    }
+
+    function setParagraphs(text) {
+      const bodyParts = splitBody(text);
+      const pBody = document.getElementById("pBody");
+      const pClosing = document.getElementById("pClosing");
+      let closing = "";
+      let paragraphs = bodyParts.slice();
+
+      if (bodyParts.length >= 2) {
+        const lastTwo = bodyParts.slice(-2).join("\n");
+        if (/best regards|kind regards|regards|sincerely|thank you/i.test(lastTwo)) {
+          closing = lastTwo;
+          paragraphs = bodyParts.slice(0, -2);
+        }
+      }
+
+      if (!closing && bodyParts.length >= 1 && /best regards|kind regards|regards|sincerely|thank you/i.test(bodyParts[bodyParts.length - 1])) {
+        closing = bodyParts[bodyParts.length - 1];
+        paragraphs = bodyParts.slice(0, -1);
+      }
+
+      pBody.innerHTML = paragraphs
+        .map((part) => `<p>${escapeHtml(part).replace(/\n/g, "<br>")}</p>`)
+        .join("");
+      pClosing.innerHTML = closing ? escapeHtml(closing).replace(/\n/g, "<br>") : "";
+
+      paragraphCount.textContent = String(paragraphs.length);
+    }
+
+    function getPlainText() {
+      const lines = [
+        valueOrFallback(state.fullName, defaults.fullName),
+        valueOrFallback(state.headline, defaults.headline),
+        [
+          valueOrFallback(state.email, defaults.email),
+          valueOrFallback(state.phone, defaults.phone),
+          valueOrFallback(state.location, defaults.location)
+        ].join(" | "),
+        "",
+        valueOrFallback(state.date, defaults.date),
+        valueOrFallback(state.recipient, defaults.recipient),
+        valueOrFallback(state.company, defaults.company),
+        "",
+        valueOrFallback(state.subject, `Application for ${valueOrFallback(state.role, defaults.role)}`),
+        "",
+        String(state.body || "").trim()
+      ];
+
+      return lines.join("\n").trim();
+    }
+
+    function updateStats() {
+      const bodyWords = String(state.body || "")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+      wordCount.textContent = String(bodyWords.length);
+      marginValue.textContent = `${Number(state.margin).toFixed(2)} in`;
+      fontSizeValue.textContent = `${Number(state.fontSize).toFixed(1)} pt`;
+    }
+
+    function sync() {
+      ids.forEach((id) => {
+        state[id] = document.getElementById(id).value;
+      });
+
+      document.getElementById("pName").textContent = valueOrFallback(state.fullName, defaults.fullName);
+      document.getElementById("pHeadline").textContent = valueOrFallback(state.headline, defaults.headline);
+      document.getElementById("pEmail").textContent = valueOrFallback(state.email, defaults.email);
+      document.getElementById("pPhone").textContent = valueOrFallback(state.phone, defaults.phone);
+      document.getElementById("pLocation").textContent = valueOrFallback(state.location, defaults.location);
+      document.getElementById("pDate").textContent = valueOrFallback(state.date, defaults.date);
+      document.getElementById("pRecipient").textContent = valueOrFallback(state.recipient, defaults.recipient);
+      document.getElementById("pCompany").textContent = valueOrFallback(state.company, defaults.company);
+      document.getElementById("pSubject").textContent =
+        valueOrFallback(state.subject, `Application for ${valueOrFallback(state.role, defaults.role)}`);
+
+      setParagraphs(state.body);
+      updateStats();
+
+      root.style.setProperty("--page-padding", `${state.margin}in`);
+      root.style.setProperty("--body-size", `${state.fontSize}pt`);
+      root.style.setProperty("--scale", "1");
+
+      requestAnimationFrame(checkFit);
+    }
+
+    function inchToPx(inches) {
+      return inches * 96;
+    }
+
+    function setStatus(message, tone) {
+      const klass = tone === "warn" ? "status-warn" : "status-ok";
+      status.innerHTML = `<span class="${klass}">${message}</span>`;
+      statusPill.innerHTML = `<span class="${klass}">${message}</span>`;
+    }
+
+    function checkFit() {
+      const pageHeight = inchToPx(11.69 - (2 * parseFloat(state.margin || defaults.margin)));
+      const contentHeight = paper.scrollHeight;
+      const fits = contentHeight <= pageHeight;
+      pageScale.textContent = `${Math.round(parseFloat(getComputedStyle(root).getPropertyValue("--scale")) * 100)}%`;
+
+      if (fits) {
+        setStatus("Fits on one page.", "ok");
+      } else {
+        setStatus("Slightly over one page. Use Auto-fit One Page.", "warn");
+      }
+    }
+
+    function autoFit() {
+      root.style.setProperty("--scale", "1");
+      requestAnimationFrame(() => {
+        const pageHeight = inchToPx(11.69 - (2 * parseFloat(state.margin || defaults.margin)));
+        const contentHeight = paper.scrollHeight;
+        const calculatedScale = Math.min(1, pageHeight / contentHeight);
+        const safeScale = Math.max(calculatedScale, 0.88);
+        root.style.setProperty("--scale", safeScale.toFixed(3));
+        pageScale.textContent = `${Math.round(safeScale * 100)}%`;
+
+        if (safeScale >= calculatedScale) {
+          setStatus("Auto-fit applied. Ready for PDF export.", "ok");
+        } else {
+          setStatus("Still tight. Reduce content or tighten margins a little more.", "warn");
+        }
+      });
+    }
+
+    async function copyPlainText() {
+      const plainText = getPlainText();
+
+      try {
+        await navigator.clipboard.writeText(plainText);
+        setStatus("Plain text copied to clipboard.", "ok");
+      } catch (error) {
+        const temp = document.createElement("textarea");
+        temp.value = plainText;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+        setStatus("Plain text copied with fallback mode.", "ok");
+      }
+    }
+
+    function safeFileName(text) {
+      return text
+        .replace(/[<>:"/\\|?*]+/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function downloadPdf() {
+      autoFit();
+      requestAnimationFrame(() => {
+        const baseName = safeFileName(
+          `${valueOrFallback(state.fullName, defaults.fullName)} - ${valueOrFallback(state.company, defaults.company)} Cover Letter`
+        ) || "Cover Letter";
+        const originalTitle = document.title;
+        document.title = baseName;
+        setStatus('Print dialog opened. Choose "Save as PDF" to download.', "ok");
+        window.print();
+        setTimeout(() => {
+          document.title = originalTitle;
+        }, 600);
+      });
+    }
+
+    function resetForm() {
+      setDefaults();
+      sync();
+      setStatus("Sample content restored.", "ok");
+    }
+
+    ids.forEach((id) => {
+      document.getElementById(id).addEventListener("input", sync);
+      document.getElementById(id).addEventListener("change", sync);
+    });
+
+    document.getElementById("fitBtn").addEventListener("click", autoFit);
+    document.getElementById("pdfBtn").addEventListener("click", downloadPdf);
+    document.getElementById("copyBtn").addEventListener("click", copyPlainText);
+    document.getElementById("resetBtn").addEventListener("click", resetForm);
+
+    setDefaults();
+    sync();
+  </script>
+</body>
+</html>
